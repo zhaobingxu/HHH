@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.Dao">
+    <!-- perpetualCache 该类实现二级缓存 -->
+    <cache></cache>
+    <!-- select 标签an:该标签内语句执行查询
+        id:namsparce指定接口中的方法名
+        resultType:结果类型 接口方法中的返回值类型:返回集合的话指的是集合中存储的数据类型
+                    指的是查询接口需要封装到哪个类中
+                    前提是:
+                    返回虚拟表字段于实体中属性一致
+     -->
+    <select id="finList" resultType="user" parameterType="Map">
+        select * from users
+        <where>
+            <if test="passwordkey !=null  and passwordkey !=''">
+                name like '%${passwordkey}%'
+            </if>
+        </where>
+
+    </select>
+
+    <select id="finUserBy" resultType="user" parameterType="Map">
+        select * from user where username = #{userName} and password=#{password}
+
+    </select>
+
+    <!-- <resultMap type="RegistrationInfor" id="listmap">
+    <id  column="medical_record" property="medical_record" />
+    <result column="name" property="name"/>
+    <result column="certificate_type" property="certificate_type"/>
+    <result column="ID_num" property="ID_num"/>
+    <result column="social_safe_num" property="social_safe_num"/>
+    <result column="phone" property="phone"/>
+    <result column="self_paying" property="self_paying"/>
+    <result column="sex" property="sex"/>
+    <result column="career" property="career"/>
+    <result column="early_appointment" property="early_appointment"/>
+    <result column="doctor_id" property="doctor_id"/>
+    <result column="status" property="status"/>
+    <result column="noted" property="noted"/>
+    <result column="time" property="time"/>
+    <result column="section_id" property="section_id"/>
+    <result column="age" property="age"/>
+    <result column="registration_fee" property="registration_fee"/>
+    <association property="doctor" javaType="Doctor">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    </association>
+    <association property="section" javaType="Section">
+    <id column="id" property="id"/>
+    <result column="secco_name" property="secco_name"/>
+    </association>
+    </resultMap > -->
+    <select id="list" resultType="RegistrationInfor" parameterType="Map">
+        SELECT
+        r.medical_record,
+        r. NAME,
+        r.certificate_type,
+        r.ID_num,
+        r.social_safe_num,
+        r.phone,
+        r.self_paying,
+        r.sex,
+        r.career,
+        r.early_appointment,
+        r.doctor_id,
+        r. status,
+        r.noted,
+        r.time,
+        r.section_id,
+        r.age,
+        r.registration_fee,
+        d. NAME doctor,
+        s.secco_name section
+        FROM
+        registrationinfor r,
+        doctor d,
+        section s
+        WHERE
+        r.doctor_id = d.id
+        AND r.section_id = s.id
+        <if test="medical_record != null and medical_record !='' ">
+            and medical_record like '%${medical_record}%'
+        </if>
+        <if test="section !=null and section !='' ">
+            and s.secco_name like '%${section}%'
+        </if>
+        <if test="doctor !=null and doctor!='' ">
+            and d.name like   '%${doctor}%'
+        </if>
+        <if test="time !=null  and time !=''  ">
+            and r.time <![CDATA[>]]> #{time}
+        </if>
+        <if test="time1 !=null  and time1 !=''  ">
+            and r.time <![CDATA[<]]> #{time1}
+        </if>
+    </select>
+
+    <select id="count" resultType="Int" parameterType="Map">
+        select count(*) FROM
+        registrationinfor r,
+        doctor d,
+        section s
+        WHERE
+        r.doctor_id = d.id
+        AND r.section_id = s.id
+        <if test="medical_record != null and medical_record !='' ">
+            and medical_record like '%${medical_record}%'
+        </if>
+        <if test="section !=null and section !='' ">
+            and s.secco_name like '%${section}%'
+        </if>
+        <if test="doctor !=null and doctor!='' ">
+            and d.name like   '%${doctor}%'
+        </if>
+        <if test="time !=null  and time !=''  ">
+            and r.time <![CDATA[>]]> #{time}
+        </if>
+        <if test="time1 !=null  and time1 !=''  ">
+            and r.time <![CDATA[<]]> #{time1}
+        </if>
+
+    </select>
+
+    <select id="datalis" parameterType="String" resultType="RegistrationInfor">
+        SELECT
+        r.medical_record,
+        r. NAME name,
+        r.certificate_type,
+        r.ID_num,
+        r.social_safe_num,
+        r.phone,
+        r.self_paying,
+        r.sex,
+        r.career,
+        r.early_appointment,
+        r.doctor_id,
+        r. status,
+        r.noted,
+        r.time,
+        r.section_id,
+        r.age,
+        r.registration_fee,
+        d. NAME doctor,
+        s.secco_name section
+        FROM
+        registrationinfor r,
+        doctor d,
+        section s
+        WHERE
+        r.doctor_id = d.id
+        AND r.section_id = s.id
+        ANd r.medical_record=#{medical_record}
+
+    </select>
+    <select id="update" parameterType="String" resultType="RegistrationInfor">
+        SELECT
+        r.medical_record,
+        r. NAME name,
+        r.certificate_type,
+        r.ID_num,
+        r.social_safe_num,
+        r.phone,
+        r.self_paying,
+        r.sex,
+        r.career,
+        r.early_appointment,
+        r.doctor_id,
+        r. status,
+        r.noted,
+        r.time,
+        r.section_id,
+        r.age,
+        r.registration_fee,
+        d. NAME doctor,
+        s.secco_name section
+        FROM
+        registrationinfor r,
+        doctor d,
+        section s
+        WHERE
+        r.doctor_id = d.id
+        AND r.section_id = s.id
+        ANd r.medical_record=#{medical_record}
+
+
+    </select>
+    <update id="up" parameterType="RegistrationInfor">
+        update registrationinfor set NAME=#{name},ID_num=#{ID_num},noted=#{noted},social_safe_num=#{social_safe_num},
+        phone=#{phone},self_paying=#{self_paying},sex=#{sex},age=#{age},career=#{career},status=#{status} where
+        medical_record=#{medical_record}
+
+    </update>
+    <delete id="delete" parameterType="String">
+        delete from registrationinfor where medical_record=#{medical_record}
+    </delete>
+
+
+
+    <insert id="add" parameterType="RegistrationInfor">
+        insert into registrationinfor
+        (name,ID_num,social_safe_num,noted,phone,self_paying,sex,age,career,status,section_id,doctor_id,certificate_type)
+        values(#{name},#{ID_num},#{social_safe_num},#{noted},#{phone},#{self_paying},#{sex},#{age},#{career},#{status},#
+        {section_id},#{doctor_id},#{certificate_type})
+    </insert>
+
+    <delete id="deall" parameterType="String">
+        delete from registrationinfor where medical_record=#{medical_record}
+    </delete>
+
+
+    <select id="finJurisdiction" parameterType="String" resultType="String">
+        select role_name from role where id =(select role_id from userrole where id = (SELECT id from user where username =
+        #{userName}))
+
+    </select>
+
+
+
+    <update id="uppp" parameterType="Map">
+        update user set password = #{password} where username = #{username}
+    </update>
+
+
+
+
+
+
+
+</mapper>

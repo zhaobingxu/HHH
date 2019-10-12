@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.user_dao">
+	<!-- perpetualCache 该类实现二级缓存 -->
+	<cache></cache>
+	<select id="list" parameterType="String" resultType="User">
+	SELECT
+	u.username,
+	u.realname real_name,
+	r.role_name ro
+FROM
+	USER u,
+	userrole us,
+	role r
+WHERE
+	u.id = us.user_id
+AND us.id = r.id
+
+	
+	<if test=" _parameter != null and _parameter != '' ">
+	 and username like '%${_parameter}%'
+	</if>
+	
+	</select>
+	
+	<select id="edit" resultType="User" parameterType="String">
+		SELECT
+	u.status,	
+	u.email,	
+	u.password,	
+	u.username,
+	u.realname real_name,
+	r.role_name ro
+FROM
+	USER u,
+	userrole us,
+	role r
+WHERE
+	u.id = us.user_id
+AND us.id = r.id
+and username = #{_parameter}
+	</select>
+	
+	<update id="editt" parameterType="User">
+	update User set password=#{password},status=#{status},realname=#{real_name},email=#{email} where username=#{userName}
+	</update>
+	<update id="editt2" parameterType="Map">
+	update role set role_name = #{ro} where id = #{id}
+	</update>
+	
+	<select id="editt3" parameterType="User" resultType="Int">
+			SELECT
+	
+	r.id
+FROM
+	USER u,
+	userrole us,
+	role r
+WHERE
+	u.id = us.user_id
+AND us.id = r.id 
+and u.username =#{userName}
+	</select>
+	<delete id="delete" parameterType="String">
+	delete from User  where username= #{_parameter}
+	</delete>
+	<insert id="add" parameterType="User">
+	insert into User (id, username,password,status,realname,email) values (#{id},#{userName},#{password},#{status},#{real_name},#{email})
+	</insert>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.dao_durg">
+	<!-- perpetualCache 该类实现二级缓存 -->
+	<cache></cache>
+	<select id="list" resultType="drug" parameterType="Map">
+	select * from  drug
+	<where>
+	<if test="drug_num != null and drug_num != '' and drug_type != null and drug_type != ''  ">
+	drug_name like  '%${drug_name}%' and drug_type = #{drug_type}
+	</if>
+	</where>
+	</select>
+	
+	<select id="count" parameterType="Map" resultType="Int">
+	select count(*) from drug
+	<where>
+	<if test="drug_num != null and drug_num != '' and drug_type != null and drug_type != ''  ">
+	drug_name like  '%${drug_name}%' and drug_type = #{drug_type}
+	</if>
+	</where>
+	</select>
+	
+	<select id="look" resultType="Drug" parameterType="String">
+	select * from  drug where  drug_num = #{drug_num}
+	
+	</select>
+	
+	<select id="edit" resultType="Drug" parameterType="String" >
+	select * from  drug where  drug_num = #{drug_num}
+	</select>
+	
+	<update id="editt" parameterType="Drug">
+	update drug set purchas_price=#{purchas_price},sale_price=#{sale_price},
+	drug_name=#{drug_name},drug_type=#{drug_type},simple_detail=#{simple_detail},
+	prodeced_date=#{prodeced_date},expiration_date=#{expiration_date},quality_date=#{quality_date},
+	detail=#{detail},manufacture=#{manufacture},use_infor=#{use_infor},total_stock=#{total_stock},
+	surplus=#{surplus},status=#{status},noted=#{noted} where drug_num = #{drug_num}
+	</update>
+	<update id="edi" parameterType="Map">
+	update drug set drug_url=#{str} where drug_num = #{drug_num}
+	</update>
+	<update id="ad" parameterType="Map">
+	update drug set drug_url=#{str} where drug_num = #{drug_num}
+	</update>
+	<insert id="add" parameterType="Drug">
+	
+	insert into drug (drug_num,purchas_price,sale_price,drug_name,drug_type,simple_detail,prodeced_date,expiration_date,
+	quality_date,detail,manufacture,use_infor,total_stock,surplus,status,noted) values (#{drug_num},#{purchas_price},
+	#{sale_price},#{drug_name},#{drug_type},#{simple_detail},#{prodeced_date},#{expiration_date},
+	#{quality_date},#{detail},#{manufacture},#{use_infor},#{total_stock},#{surplus},#{status},#{noted})
+	</insert>
+</mapper>

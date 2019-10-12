@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.dao_doctor">
+	<!-- perpetualCache 该类实现二级缓存 -->
+	<cache></cache>
+	
+	<select id="list" resultType="doctor" parameterType="Map">
+	select d.id,d.name,d.certificate_type,d.ID_num,
+	d.phone,
+	d.special_plane,
+	d.sex,
+	d.age,
+	d.birther,
+	d.email,
+	d.section_id,
+	d.education,
+	d.noted,
+	d.time,
+	s.secco_name section
+	from doctor d ,section s where d.section_id = s.id
+	<if test="ID_num !=null and ID_num!='' ">
+	and ID_num like '%${ID_num}%'
+	</if>
+	<if test="Name !=null and Name!='' ">
+	and  name like '%${Name}%'
+	</if>
+	<if test="Section !=null and Section!='' ">
+	and s.secco_name  like '%${Section}%'
+	</if>
+	</select>
+	<select id="count" parameterType="Map" resultType="Int">
+	select count(*)
+	from doctor d ,section s where d.section_id = s.id
+	<if test="ID_num !=null and ID_num!='' ">
+	and ID_num like '%${ID_num}%'
+	</if>
+	<if test="Name !=null and Name!='' ">
+	and  name like '%${Name}%'
+	</if>
+	<if test="Section !=null and Section!='' ">
+	and s.secco_name  like '%${Section}%'
+	</if>
+	</select>
+	<select id="look" parameterType="Int" resultType="doctor">
+	select d.id,d.name,d.certificate_type,d.ID_num,
+	d.phone,
+	d.special_plane,
+	d.sex,
+	d.age,
+	d.birther,
+	d.email,
+	d.section_id,
+	d.education,
+	d.noted,
+	d.time,
+	s.secco_name section
+	from doctor d ,section s where d.section_id = s.id and d.id = #{id}
+	</select>
+	
+	<select id="edit" resultType="doctor" parameterType="int">
+	select d.id,d.name,d.certificate_type,d.ID_num,
+	d.phone,
+	d.special_plane,
+	d.sex,
+	d.age,
+	d.birther,
+	d.email,
+	d.section_id,
+	d.education,
+	d.noted,
+	d.time,
+	s.secco_name section
+	from doctor d ,section s where d.section_id = s.id and d.id = #{id}
+	</select>
+	<insert id="add" parameterType="doctor">
+	insert into doctor (name,certificate_type,ID_num,phone,special_plane,sex,age,birther,email,section_id,education,noted
+	)values(#{name},#{certificate_type},#{ID_num},#{phone},#{special_plane},#{sex},#{age},#{birther},#{email},#{section_id},#{education},#{noted})
+	</insert >
+	
+	<update id="editt" parameterType="doctor">
+	update doctor set name=#{name},certificate_type=#{certificate_type},ID_num=#{ID_num},phone=#{phone},special_plane=#{special_plane},sex=#{sex},age=#{age},birther=#{birther},email=#{email},section_id=#{section_id},education=#{education},noted=#{noted} 
+	where id = #{id}
+	</update>
+</mapper>

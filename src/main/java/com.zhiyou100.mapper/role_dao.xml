@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.role_dao">
+	<!-- perpetualCache 该类实现二级缓存 -->
+	<cache></cache>
+	<select id="list" parameterType="String" resultType="Role">
+	select id, role_name,statuss  from  role
+	<where>
+	<if test=" _parameter != null and _parameter != '' ">
+	 and role_name like '%${_parameter}%'
+	</if>
+	</where> 
+	
+	</select>
+	
+	
+	
+	<delete id="delete" parameterType="Int">
+	delete  from role where id =#{id}
+	</delete>
+	
+	<insert id="add" parameterType="Map">
+	insert into role (role_name ,statuss) values(#{title},#{status})
+	</insert>
+	<select id="add1" parameterType="String" resultType="Int">
+	select id from role where role_name = #{_parameter}
+	</select>
+	<insert id="add2" parameterType="Map" >
+	insert into rolepermission (role_id,permission_id) values (#{r_id},#{id})
+	</insert>
+	
+	
+	
+	<select id="edit" parameterType="int" resultType="Role">
+	select permission_id from rolepermission where role_id = #{id}
+	
+	</select>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namsparce 类路径 于此映射路径有关联的接口文件路径 -->
+<mapper namespace="com.zhiyou100.mapper.dao_pay">
+	<!-- perpetualCache 该类实现二级缓存 -->
+	<cache></cache>
+	<select id="count" parameterType="Map" resultType="Int">	
+	select count(*) from 
+	registrationinfor r,
+	payitems p,
+	chargemanager c
+WHERE
+	r.medical_record = c.medical_record
+AND c.pay_items_id = p.id
+	<if test="medical_record !=null and medical_record !='' "></if>
+	and r.medical_record like '%${medical_record}%'
+	<if test="name !=null and name !='' "></if>
+	and r.name like '%${name}%'
+	</select>
+	
+	
+	
+	
+	<select id="list" parameterType="Map" resultType="PayItems">
+	SELECT
+	r.medical_record idd,
+	r. name name,
+	p.charge_item_name,
+	p.receivable_money,
+	c.charge_time time
+FROM
+	registrationinfor r,
+	payitems p,
+	chargemanager c
+WHERE
+	r.medical_record = c.medical_record
+AND c.pay_items_id = p.id
+	<if test="medical_record !=null and medical_record !='' "></if>
+	and r.medical_record like '%${medical_record}%'
+	<if test="name !=null and name !='' "></if>
+	and  r.name like '%${name}%'
+	
+	</select>
+	
+	<select id="ad" resultType="PayItems" parameterType="Int">
+	SELECT
+	r.medical_record idd,
+	r. name name,
+	p.charge_item_name,
+	p.receivable_money,
+	c.charge_time time
+FROM
+	registrationinfor r,
+	payitems p,
+	chargemanager c
+WHERE
+	r.medical_record = c.medical_record
+AND c.pay_items_id = p.id  and r.medical_record =#{idd} GROUP BY idd
+	</select>
+	
+	<insert id="add" parameterType="PayItems">
+	insert into chargemanager (medical_record,pay_items_id,charge_money) values(#{idd},#{charge_item_name},#{receivable_money})
+	</insert>
+	<update id="addd" parameterType="Map">
+	update chargemanager set charge_time = #{format} where medical_record = #{name}
+	</update>
+	
+</mapper>
